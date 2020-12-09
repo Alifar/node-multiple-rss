@@ -1,0 +1,22 @@
+{
+  "name": "rss-feeds",
+  "version": "1.0.0",
+  "description": "Multiple feed reader",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "prod": "node index.js"
+  },
+  "author": "Ali Farhat",
+  "license": "ISC",
+  "dependencies": {
+    "feedparser": "^2.2.10",
+    "lodash": "^4.17.20",
+    "nodemon": "^2.0.6",
+    "q": "^1.5.1",
+    "request": "^2.88.2",
+    "rss": "^1.2.2",
+    "stream-to-string": "^1.2.0"
+  }
+}
