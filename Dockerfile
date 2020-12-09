@@ -8,6 +8,7 @@ WORKDIR /app
 COPY package.json /app/package.json
 RUN npm install --silent
 RUN npm install async
+RUN npm install forever -g
 RUN npm ci --only=production
 
 # add `/app/node_modules/.bin` to $PATH
@@ -16,4 +17,4 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY . .
 
 # start app
-CMD ["node", "index.js"]
+CMD ["forever", "index.js"]
