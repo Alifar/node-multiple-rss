@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "feedparser": "^2.2.10",
+    "ini": "^2.0.0",
     "lodash": "^4.17.20",
     "nodemon": "^2.0.6",
     "q": "^1.5.1",
