@@ -1,5 +1,7 @@
 'use strict';
 
+const axios = require('axios');
+const cheerio = require('cheerio');
 const { PassThrough } = require('stream');
 var _ = require('lodash');
 var Q = require('q');
@@ -126,14 +128,47 @@ function getImage(entry) {
 	return defaultImg;
 }
 
-function createFeed(feedConfig, entries) {
+async function fetchHTML(url) {
+	const { data } = await axios.get(url);
+	return cheerio.load(data, { decodeEntities: false });
+}
+
+async function createFeed(feedConfig, entries) {
 	var newFeed = new RSS(feedConfig);
 	for (var i = 0; i < entries.length; i++) {
 		var thisEntry = entries[i];
 		if (thisEntry === null) continue;
+		var feedUrl = thisEntry.meta.xmlurl
+			? thisEntry.meta.xmlurl
+			: thisEntry.meta.xmlUrl;
 
+		var feedDiv = null;
+		if (feedUrl === 'https://www.nu.nl/rss/Tech') {
+			feedDiv = 'column first';
+		}
+		if (feedUrl === 'https://www.nu.nl/rss/Economie') {
+			feedDiv = 'column first';
+		}
+		if (feedUrl === 'https://nieuws.btcdirect.eu/feed/') {
+			feedDiv = 'mkd-post-content';
+		}
+		if (feedUrl === 'https://feedpress.me/iculture') {
+			feedDiv = 'main__content editable';
+		}
+		if (thisEntry.meta.link === 'https://nl.investing.com') {
+			feedDiv = 'WYSIWYG articlePage';
+		}
+		if (
+			thisEntry.meta.link ===
+			'https://www.rtlnieuws.nl/taxonomy/term/160941?_format=rss'
+		) {
+			feedDiv = 'large-12 medium-12 article-container';
+		}
+
+		const $ = await fetchHTML(thisEntry.link);
+		const content = $(`div[class='${feedDiv}']`).html().trim(); // Change .html() to .text() if you want the text only
 		var description = `${thisEntry.meta.title}: ${
-			thisEntry.description ? thisEntry.description : thisEntry.title
+			content ? content : thisEntry.description
 		}`;
 		var custom_elements = [];
 		var custom_entries = Object.keys(thisEntry).map(function (tag) {
@@ -203,7 +238,7 @@ function combine(feedConfig, callback) {
 		}
 
 		if (!feedConfig.link) {
-			feedConfig.link = 'https://www.npmjs.com/package/rss-combiner-ns';
+			feedConfig.link = 'https://github.com/Alifar/node-multiple-rss';
 		}
 
 		// Strip properties 'feeds' and 'size' from config to be passed to `rss` module
