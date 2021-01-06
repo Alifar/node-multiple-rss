@@ -166,10 +166,24 @@ async function createFeed(feedConfig, entries) {
 		}
 
 		const $ = await fetchHTML(thisEntry.link);
-		const content = $(`div[class='${feedDiv}']`).html().trim(); // Change .html() to .text() if you want the text only
-		var description = `${thisEntry.meta.title}: ${
-			content ? content : thisEntry.description
-		}`;
+		const content = $(`div[class='${feedDiv}']`).html().trim();
+
+		var scriptRemove = content.replace(
+			/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gim,
+			''
+		);
+
+		var noScriptRemove = scriptRemove.replace(
+			/<noscript\b[^<]*(?:(?!<\/noscript>)<[^<]*)*<\/noscript>/gim,
+			''
+		);
+
+		var text = noScriptRemove.replace(
+			/<\/?(span|div|figure|figcaption|a|path|svg|rect|article|meta|header)\b[^<>]*>/g,
+			''
+		);
+
+		var description = `${content ? text : thisEntry.description}`;
 		var custom_elements = [];
 		var custom_entries = Object.keys(thisEntry).map(function (tag) {
 			var ns = tag.split(':');

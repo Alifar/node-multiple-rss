@@ -12,7 +12,6 @@ var feedConfig = {
 		'https://feedpress.me/iculture',
 		'https://www.nu.nl/rss/Economie',
 		'https://www.nu.nl/rss/Tech',
-		'https://nl.investing.com/rss/news_285.rss',
 		'https://www.rtlnieuws.nl/tech?_format=rss',
 	],
 	pubDate: new Date(),
