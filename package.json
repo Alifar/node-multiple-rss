@@ -11,7 +11,7 @@
   "author": "Ali Farhat",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
     "feedparser": "^2.2.10",
     "ini": "^2.0.0",
